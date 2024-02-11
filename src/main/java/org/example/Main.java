@@ -3,8 +3,7 @@ package org.example;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
-import org.example.dto.EntriesJsonDto;
-import org.example.dto.ReviewDto;
+import org.example.dto.ResponseJsonDto;
 import org.example.dto.har.Har;
 import org.example.mapper.ReviewMapper;
 import org.example.model.Review;
@@ -28,18 +27,18 @@ public class Main {
             Har har = gson.fromJson(reader, Har.class);
             reader.close();
 
-            List<String> filteredEntries = getFilteredEntries(har);
-            for (String entry: filteredEntries) {
-                EntriesJsonDto entriesJsonDto = gson.fromJson(entry, EntriesJsonDto.class);
-                List<Review> reviews = entriesJsonDto.getContent().stream()
+            List<String> filteredResponses = getFilteredResponse(har);
+            for (String response: filteredResponses) {
+                ResponseJsonDto responseJsonDto = gson.fromJson(response, ResponseJsonDto.class);
+                List<Review> reviews = responseJsonDto.getContent().stream()
                         .map(ReviewMapper::mapToEntity)
                         .toList();
-
+                //TODO see it it works and save those reviews to database
             }
         }
     }
 
-    private static List<String> getFilteredEntries(Har har) {
+    private static List<String> getFilteredResponse(Har har) {
         return har.getLog().getEntries().stream()
                 .filter(harEntry -> harEntry.getRequest().getUrl().matches(RATING_URL))
                 .filter(harEntry -> harEntry.getResponse().getStatus() == 200)

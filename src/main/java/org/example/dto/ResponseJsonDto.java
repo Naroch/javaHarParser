@@ -2,10 +2,10 @@ package org.example.dto;
 
 import java.util.List;
 
-public class EntriesJsonDto {
+public class ResponseJsonDto {
     private List<ReviewDto> content;
 
-    public EntriesJsonDto(List<ReviewDto> content) {
+    public ResponseJsonDto(List<ReviewDto> content) {
         this.content = content;
     }
 

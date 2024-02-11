@@ -24,6 +24,8 @@ public class DatabaseHandler {
             VALUES (?, ?)
             ON CONFLICT (review_id, product_id) DO NOTHING""";
 
+    //TODO make sure to make batch requests
+    //TODO always close connections after use
     private Connection getConnection() {
         try {
             Connection connection = DriverManager.getConnection(url, username, password);

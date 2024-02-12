@@ -21,14 +21,14 @@ public class DatabaseHandler {
 //);
 //
 //    CREATE TABLE products (
-//            id SERIAL PRIMARY KEY,
+//            id BIGSERIAL PRIMARY KEY,
 //            title VARCHAR(255),
 //    url TEXT
 //);
 //
 //    CREATE TABLE reviews_products (
 //            review_id varchar(24),
-//    product_id INTEGER,
+//    product_id BIGSERIAL,
 //    CONSTRAINT pk_review_product PRIMARY KEY (review_id, product_id)
 //);
     private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnalitics";

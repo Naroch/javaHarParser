@@ -10,6 +10,27 @@ import java.util.List;
 
 public class DatabaseHandler {
 
+//    CREATE TABLE reviews (
+//            id varchar(24) PRIMARY KEY,
+//    creationDate TIMESTAMP WITHOUT TIME ZONE,
+//    lastChangeDate TIMESTAMP WITHOUT TIME ZONE,
+//    ratedAgain BOOLEAN,
+//    descriptionRating INT,
+//    serviceRating INT,
+//    recommend BOOLEAN
+//);
+//
+//    CREATE TABLE products (
+//            id SERIAL PRIMARY KEY,
+//            title VARCHAR(255),
+//    url TEXT
+//);
+//
+//    CREATE TABLE reviews_products (
+//            review_id varchar(24),
+//    product_id INTEGER,
+//    CONSTRAINT pk_review_product PRIMARY KEY (review_id, product_id)
+//);
     private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnalitics";
     private final static String username = "admin";
     private final static String password = "admin";
@@ -25,7 +46,7 @@ public class DatabaseHandler {
     private final static String LINK_REVIEW_WITH_PRODUCTS = """
             INSERT INTO reviews_products (review_id, product_id)
             VALUES (?, ?)
-            ON CONFLICT (review_id, product_id) DO NOTHING"""; //TODO
+            ON CONFLICT (review_id, product_id) DO NOTHING""";
 
     private static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, username, password);
@@ -50,13 +71,13 @@ public class DatabaseHandler {
                     insertReview.addBatch();
 
                     for (Product product : review.getProducts()) {
-                        insertProduct.setInt(1, (int) product.getId());
+                        insertProduct.setLong(1,  product.getId());
                         insertProduct.setString(2, product.getTitle());
                         insertProduct.setString(3, product.getUrl());
                         insertProduct.addBatch();
 
                         linkReviewProduct.setString(1, review.getId());
-                        linkReviewProduct.setInt(2, (int) product.getId());
+                        linkReviewProduct.setLong(2, product.getId());
                         linkReviewProduct.addBatch();
                     }
                 }

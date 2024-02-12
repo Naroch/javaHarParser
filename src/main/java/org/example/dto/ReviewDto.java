@@ -2,10 +2,9 @@ package org.example.dto;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class ReviewDto {
-    private UUID id;
+    private String id;
     private Date creationDate;
     private Date lastChangeDate;
     private boolean ratedAgain;
@@ -14,23 +13,23 @@ public class ReviewDto {
 
     private List<ProductDto> offers;
 
-    private RatesDto ratesDto;
+    private RatesDto rates;
 
-    public ReviewDto(UUID id, Date creationDate, Date lastChangeDate, boolean ratedAgain, boolean recommend, List<ProductDto> offers, RatesDto ratesDto) {
+    public ReviewDto(String id, Date creationDate, Date lastChangeDate, boolean ratedAgain, boolean recommend, List<ProductDto> offers, RatesDto rates) {
         this.id = id;
         this.creationDate = creationDate;
         this.lastChangeDate = lastChangeDate;
         this.ratedAgain = ratedAgain;
         this.recommend = recommend;
         this.offers = offers;
-        this.ratesDto = ratesDto;
+        this.rates = rates;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -66,12 +65,12 @@ public class ReviewDto {
         this.recommend = recommend;
     }
 
-    public RatesDto getRatesDto() {
-        return ratesDto;
+    public RatesDto getRates() {
+        return rates;
     }
 
-    public void setRatesDto(RatesDto ratesDto) {
-        this.ratesDto = ratesDto;
+    public void setRates(RatesDto rates) {
+        this.rates = rates;
     }
 
     public List<ProductDto> getOffers() {

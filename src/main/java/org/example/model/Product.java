@@ -1,36 +1,23 @@
 package org.example.model;
 
-import java.net.URL;
-import java.util.UUID;
-
 public class Product {
 
-    private int id;
-    private UUID orderOfferId;
+    private long id;
     private String title;
     private String url;
 
-    public Product(int id, UUID orderOfferId, String title, String url) {
+    public Product(long id, String title, String url) {
         this.id = id;
-        this.orderOfferId = orderOfferId;
         this.title = title;
         this.url = url;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public UUID getOrderOfferId() {
-        return orderOfferId;
-    }
-
-    public void setOrderOfferId(UUID orderOfferId) {
-        this.orderOfferId = orderOfferId;
     }
 
     public String getTitle() {

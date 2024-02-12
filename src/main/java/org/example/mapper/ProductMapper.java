@@ -10,7 +10,6 @@ public class ProductMapper {
     public static Product mapToEntity(ProductDto productDto) {
         return new Product(
                 productDto.getId(),
-                productDto.getOrderOfferId(),
                 productDto.getTitle(),
                 productDto.getUrl()
         );

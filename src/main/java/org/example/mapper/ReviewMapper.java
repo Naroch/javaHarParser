@@ -13,8 +13,8 @@ public class ReviewMapper {
                 reviewDto.getCreationDate(),
                 reviewDto.getLastChangeDate(),
                 reviewDto.isRatedAgain(),
-                reviewDto.getRatesDto().getDescription(),
-                reviewDto.getRatesDto().getService(),
+                reviewDto.getRates().getDescription(),
+                reviewDto.getRates().getService(),
                 reviewDto.isRecommend(),
                 ProductMapper.mapToEntityList(reviewDto.getOffers())
         );

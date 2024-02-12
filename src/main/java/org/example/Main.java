@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Main {
 
-    private static final String RATING_URL = "https://edge.allegro.pl/ratings-api/sellers/";
+    private static final String RATING_URL = "https://edge.allegro.pl/ratings-api/sellers/.*";
 
     public static void main(String[] args) throws IOException {
         Gson gson = new GsonBuilder().setLenient().create();
@@ -33,7 +33,7 @@ public class Main {
                 List<Review> reviews = responseJsonDto.getContent().stream()
                         .map(ReviewMapper::mapToEntity)
                         .toList();
-                //TODO see it it works and save those reviews to database
+                DatabaseHandler.saveReviewsAndProducts(reviews); //save reviews added
             }
         }
     }
@@ -43,7 +43,6 @@ public class Main {
                 .filter(harEntry -> harEntry.getRequest().getUrl().matches(RATING_URL))
                 .filter(harEntry -> harEntry.getResponse().getStatus() == 200)
                 .map(harEntry -> harEntry.getResponse().getContent().getText())
-//                .map(entry -> entry.replace("\\", "")) unneeded with gson
                 .toList();
     }
 }

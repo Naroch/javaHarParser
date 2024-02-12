@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class Review {
-    private UUID id;
+    private String id;
     private Date creationDate;
     private Date lastChangeDate;
     private boolean ratedAgain;
@@ -16,7 +16,7 @@ public class Review {
 
     private List<Product> products;
 
-    public Review(UUID id, Date creationDate, Date lastChangeDate, boolean ratedAgain, int descriptionRating, int serviceRating, boolean recommend, List<Product> products) {
+    public Review(String id, Date creationDate, Date lastChangeDate, boolean ratedAgain, int descriptionRating, int serviceRating, boolean recommend, List<Product> products) {
         this.id = id;
         this.creationDate = creationDate;
         this.lastChangeDate = lastChangeDate;
@@ -27,11 +27,11 @@ public class Review {
         this.products = products;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

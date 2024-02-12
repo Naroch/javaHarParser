@@ -31,9 +31,9 @@ public class DatabaseHandler {
 //    product_id BIGSERIAL,
 //    CONSTRAINT pk_review_product PRIMARY KEY (review_id, product_id)
 //);
-    private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnalitics";
-    private final static String username = "admin";
-    private final static String password = "admin";
+    private final static String url = "jdbc:postgresql://localhost:5432/AllegroAnalitics";
+    private final static String username = "postgres";
+    private final static String password = "qwewsx123";
 
     private final static String INSERT_REVIEW = """
             INSERT INTO reviews (id, creationDate, lastChangeDate, ratedAgain, descriptionRating, serviceRating, recommend)

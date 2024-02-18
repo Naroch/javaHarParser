@@ -78,14 +78,14 @@ public class DatabaseHandler {
 //    INNER JOIN MonthlyReviews mr ON pr.product_id = mr.product_id
 //    ORDER BY
 //    pr.total_positive_reviews DESC, pr.product_id, mr.year, mr.month;
-private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnalitics2?charSet=UTF-8";
+private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnalitics?charSet=UTF-8";
 
     private final static String username = "admin";
     private final static String password = "admin";
 
     private final static String INSERT_REVIEW = """
-            INSERT INTO reviews (id, creationDate, lastChangeDate, ratedAgain, descriptionRating, serviceRating, recommend)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO reviews (id, seller, creationDate, lastChangeDate, ratedAgain, descriptionRating, serviceRating, recommend)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT (id) DO NOTHING""";
     private final static String INSERT_PRODUCT = """
             INSERT INTO products (id, title, url) 
@@ -110,12 +110,13 @@ private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnal
 
                 for (Review review : reviews) {
                     insertReview.setString(1, review.getId());
-                    insertReview.setTimestamp(2, new java.sql.Timestamp(review.getCreationDate().getTime()));
-                    insertReview.setTimestamp(3, new java.sql.Timestamp(review.getLastChangeDate().getTime()));
-                    insertReview.setBoolean(4, review.isRatedAgain());
-                    insertReview.setInt(5, review.getDescriptionRating());
-                    insertReview.setInt(6, review.getServiceRating());
-                    insertReview.setBoolean(7, review.isRecommend());
+                    insertReview.setString(2, review.getSeller());
+                    insertReview.setTimestamp(3, new java.sql.Timestamp(review.getCreationDate().getTime()));
+                    insertReview.setTimestamp(4, new java.sql.Timestamp(review.getLastChangeDate().getTime()));
+                    insertReview.setBoolean(5, review.isRatedAgain());
+                    insertReview.setInt(6, review.getDescriptionRating());
+                    insertReview.setInt(7, review.getServiceRating());
+                    insertReview.setBoolean(8, review.isRecommend());
                     insertReview.addBatch();
 
                     for (Product product : review.getProducts()) {

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class DatabaseHandler {
-
+//
 //    CREATE TABLE reviews (
 //            id varchar(24) PRIMARY KEY,
 //    creationDate TIMESTAMP WITHOUT TIME ZONE,
@@ -31,7 +31,8 @@ public class DatabaseHandler {
 //    product_id BIGSERIAL,
 //    CONSTRAINT pk_review_product PRIMARY KEY (review_id, product_id)
 //);
-    private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnalitics";
+private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnalitics2?charSet=UTF-8";
+
     private final static String username = "admin";
     private final static String password = "admin";
 

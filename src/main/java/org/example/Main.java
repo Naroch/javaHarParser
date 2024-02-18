@@ -8,9 +8,8 @@ import org.example.dto.har.Har;
 import org.example.mapper.ReviewMapper;
 import org.example.model.Review;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class Main {
@@ -23,7 +22,7 @@ public class Main {
         File[] files = FileLoader.loadFiles();
         for (File file : files) {
             System.out.println("Przetwarzanie pliku: " + file.getName());
-            JsonReader reader = new JsonReader(new FileReader(file.getAbsolutePath()));
+            JsonReader reader = new JsonReader(new InputStreamReader(new FileInputStream(file.getAbsolutePath()), StandardCharsets.UTF_8));
             Har har = gson.fromJson(reader, Har.class);
             reader.close();
 

@@ -7,9 +7,10 @@ import java.util.List;
 
 public class ReviewMapper {
 
-    public static Review mapToEntity(ReviewDto reviewDto) {
+    public static Review mapToEntity(ReviewDto reviewDto, String sellerName) {
         return new Review(
                 reviewDto.getId(),
+                sellerName,
                 reviewDto.getCreationDate(),
                 reviewDto.getLastChangeDate(),
                 reviewDto.isRatedAgain(),
@@ -20,9 +21,9 @@ public class ReviewMapper {
         );
     }
 
-    public static List<Review> mapToEntityList(List<ReviewDto> reviewDtos) {
+    public static List<Review> mapToEntityList(List<ReviewDto> reviewDtos, String sellerName) {
         return reviewDtos.stream()
-                .map(ReviewMapper::mapToEntity)
+                .map((reviewDto) -> ReviewMapper.mapToEntity(reviewDto, sellerName))
                 .toList();
     }
 }

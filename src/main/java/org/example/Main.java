@@ -11,6 +11,8 @@ import org.example.model.Review;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
 
@@ -26,13 +28,20 @@ public class Main {
             Har har = gson.fromJson(reader, Har.class);
             reader.close();
 
-            List<String> filteredResponses = getFilteredResponse(har);
-            for (String response: filteredResponses) {
-                ResponseJsonDto responseJsonDto = gson.fromJson(response, ResponseJsonDto.class);
-                List<Review> reviews = responseJsonDto.getContent().stream()
-                        .map(ReviewMapper::mapToEntity)
-                        .toList();
-                DatabaseHandler.saveReviewsAndProducts(reviews); //save reviews added
+            Pattern pattern = Pattern.compile("[^.\\\\s]+"); // match string till space or dot character appears
+            Matcher matcher = pattern.matcher(file.getName());
+            if (matcher.find()) {
+                String sellerName = matcher.group();
+                List<String> filteredResponses = getFilteredResponse(har);
+                for (String response: filteredResponses) {
+                    ResponseJsonDto responseJsonDto = gson.fromJson(response, ResponseJsonDto.class);
+                    List<Review> reviews = responseJsonDto.getContent().stream()
+                            .map((reviewsDto) -> ReviewMapper.mapToEntity(reviewsDto, sellerName))
+                            .toList();
+                    DatabaseHandler.saveReviewsAndProducts(reviews); //save reviews added
+                }
+            } else {
+                System.out.println("nie można znaleźć sprzedawcy po nazwie pliku, pomijanie pliku " + file.getName());
             }
         }
     }

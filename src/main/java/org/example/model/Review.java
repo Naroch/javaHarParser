@@ -2,10 +2,10 @@ package org.example.model;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class Review {
     private String id;
+    private String seller;
     private Date creationDate;
     private Date lastChangeDate;
     private boolean ratedAgain;
@@ -16,8 +16,9 @@ public class Review {
 
     private List<Product> products;
 
-    public Review(String id, Date creationDate, Date lastChangeDate, boolean ratedAgain, int descriptionRating, int serviceRating, boolean recommend, List<Product> products) {
+    public Review(String id, String seller, Date creationDate, Date lastChangeDate, boolean ratedAgain, int descriptionRating, int serviceRating, boolean recommend, List<Product> products) {
         this.id = id;
+        this.seller = seller;
         this.creationDate = creationDate;
         this.lastChangeDate = lastChangeDate;
         this.ratedAgain = ratedAgain;
@@ -25,6 +26,14 @@ public class Review {
         this.serviceRating = serviceRating;
         this.recommend = recommend;
         this.products = products;
+    }
+
+    public String getSeller() {
+        return seller;
+    }
+
+    public void setSeller(String seller) {
+        this.seller = seller;
     }
 
     public String getId() {

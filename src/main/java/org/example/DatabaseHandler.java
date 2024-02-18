@@ -12,23 +12,24 @@ public class DatabaseHandler {
 //
 //    CREATE TABLE reviews (
 //            id varchar(24) PRIMARY KEY,
-//    creationDate TIMESTAMP WITHOUT TIME ZONE,
-//    lastChangeDate TIMESTAMP WITHOUT TIME ZONE,
-//    ratedAgain BOOLEAN,
-//    descriptionRating INT,
-//    serviceRating INT,
-//    recommend BOOLEAN
+//    seller varchar(15) NOT NULL,
+//    creationDate TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+//    lastChangeDate TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+//    ratedAgain BOOLEAN NOT NULL,
+//    descriptionRating INT NOT NULL,
+//    serviceRating INT NOT NULL,
+//    recommend BOOLEAN NOT NULL
 //);
 //
 //    CREATE TABLE products (
 //            id BIGSERIAL PRIMARY KEY,
-//            title VARCHAR(255),
-//    url TEXT
+//            title VARCHAR(255) NOT NULL,
+//    url TEXT NOT NULL
 //);
 //
 //    CREATE TABLE reviews_products (
-//            review_id varchar(24),
-//    product_id BIGSERIAL,
+//            review_id varchar(24) NOT NULL,
+//    product_id BIGSERIAL NOT NULL,
 //    CONSTRAINT pk_review_product PRIMARY KEY (review_id, product_id)
 //);
 

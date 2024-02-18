@@ -31,6 +31,52 @@ public class DatabaseHandler {
 //    product_id BIGSERIAL,
 //    CONSTRAINT pk_review_product PRIMARY KEY (review_id, product_id)
 //);
+
+
+
+//    WITH ProductReviews AS (
+//            SELECT
+//                    p.id AS product_id,
+//            p.title AS product_title,
+//            p.url AS product_url,
+//            COUNT(r.id) AS total_positive_reviews
+//    FROM
+//    reviews r
+//    INNER JOIN reviews_products rp ON r.id = rp.review_id
+//    INNER JOIN products p ON rp.product_id = p.id
+//            WHERE
+//    r.recommend = TRUE
+//    GROUP BY
+//    p.id
+//),
+//    MonthlyReviews AS (
+//            SELECT
+//                    p.id AS product_id,
+//            EXTRACT(YEAR FROM r.creationDate) AS year,
+//    EXTRACT(MONTH FROM r.creationDate) AS month,
+//    COUNT(r.id) AS positive_reviews_count
+//    FROM
+//    reviews r
+//    INNER JOIN reviews_products rp ON r.id = rp.review_id
+//    INNER JOIN products p ON rp.product_id = p.id
+//            WHERE
+//    r.recommend = TRUE
+//    GROUP BY
+//    p.id, EXTRACT(YEAR FROM r.creationDate), EXTRACT(MONTH FROM r.creationDate)
+//            )
+//    SELECT
+//    pr.product_id,
+//    pr.product_title,
+//    pr.product_url,
+//    mr.year,
+//    mr.month,
+//    mr.positive_reviews_count,
+//    pr.total_positive_reviews
+//            FROM
+//    ProductReviews pr
+//    INNER JOIN MonthlyReviews mr ON pr.product_id = mr.product_id
+//    ORDER BY
+//    pr.total_positive_reviews DESC, pr.product_id, mr.year, mr.month;
 private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnalitics2?charSet=UTF-8";
 
     private final static String username = "admin";

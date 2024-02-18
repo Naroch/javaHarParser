@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_USER: admin
       POSTGRES_DB: AllegroAnalitics
-      # Usuwamy POSTGRES_ENCODING, zamiast tego dodajemy:
+   
       LANG: en_US.utf8
       LC_COLLATE: en_US.utf8
       LC_CTYPE: en_US.utf8

@@ -28,7 +28,7 @@ public class Main {
             Har har = gson.fromJson(reader, Har.class);
             reader.close();
 
-            Pattern pattern = Pattern.compile("[^.\\\\s]+"); // match string till space or dot character appears
+            Pattern pattern = Pattern.compile("(^[\\w-]+)"); // match string till space or dot character appears
             Matcher matcher = pattern.matcher(file.getName());
             if (matcher.find()) {
                 String sellerName = matcher.group();

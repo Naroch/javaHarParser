@@ -12,7 +12,7 @@ public class DatabaseHandler {
 //
 //    CREATE TABLE reviews (
 //            id varchar(24) PRIMARY KEY,
-//    seller varchar(15) NOT NULL,
+//    seller varchar(25) NOT NULL,
 //    creationDate TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 //    lastChangeDate TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 //    ratedAgain BOOLEAN NOT NULL,

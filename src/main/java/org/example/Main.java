@@ -35,10 +35,14 @@ public class Main {
                 List<String> filteredResponses = getFilteredResponse(har);
                 for (String response: filteredResponses) {
                     ResponseJsonDto responseJsonDto = gson.fromJson(response, ResponseJsonDto.class);
-                    List<Review> reviews = responseJsonDto.getContent().stream()
-                            .map((reviewsDto) -> ReviewMapper.mapToEntity(reviewsDto, sellerName))
-                            .toList();
-                    DatabaseHandler.saveReviewsAndProducts(reviews); //save reviews added
+                    if (responseJsonDto != null) {
+                        List<Review> reviews = responseJsonDto.getContent().stream()
+                                .map((reviewsDto) -> ReviewMapper.mapToEntity(reviewsDto, sellerName))
+                                .toList();
+                        DatabaseHandler.saveReviewsAndProducts(reviews); //save reviews added
+                    } else {
+                        System.out.println("row was empty");
+                    }
                 }
             } else {
                 System.out.println("nie można znaleźć sprzedawcy po nazwie pliku, pomijanie pliku " + file.getName());

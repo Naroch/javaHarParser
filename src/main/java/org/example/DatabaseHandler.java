@@ -135,7 +135,7 @@ private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnal
                 insertProduct.executeBatch();
                 linkReviewProduct.executeBatch();
                 connection.commit();
-                System.out.println("Batch insert completed successfully.");
+//                System.out.println("Batch insert completed successfully.");
             } catch (SQLException e) {
                 connection.rollback();
                 System.err.println("Failed to execute batch insert. Transaction is rolled back.");

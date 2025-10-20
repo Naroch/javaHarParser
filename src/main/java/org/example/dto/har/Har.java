@@ -1,17 +1,12 @@
 package org.example.dto.har;
 
+import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Har {
     private HarLog log;
-
-    public HarLog getLog() {
-        return log;
-    }
-
-    public void setLog(HarLog log) {
-        this.log = log;
-    }
-
-    public Har(HarLog log) {
-        this.log = log;
-    }
 }

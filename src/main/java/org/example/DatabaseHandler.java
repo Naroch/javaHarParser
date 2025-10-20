@@ -96,10 +96,6 @@ private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnal
             VALUES (?, ?)
             ON CONFLICT (review_id, product_id) DO NOTHING""";
 
-    private static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
-    }
-
     public static void saveReviewsAndProducts(List<Review> reviews) {
         try (Connection connection = getConnection()) {
             connection.setAutoCommit(false);
@@ -145,5 +141,9 @@ private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnal
             System.err.println("Failed to obtain database connection.");
             e.printStackTrace();
         }
+    }
+
+    private static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(url, username, password);
     }
 }

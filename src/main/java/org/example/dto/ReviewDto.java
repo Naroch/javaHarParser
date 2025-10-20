@@ -14,10 +14,7 @@ public class ReviewDto {
     private Date creationDate;
     private Date lastChangeDate;
     private boolean ratedAgain;
-
     private boolean recommend;
-
     private List<ProductDto> offers;
-
-    private RatesDto rates;
+    private CommentDto comment;
 }

@@ -18,36 +18,51 @@ public class Main {
 
     private static final String RATING_URL = "https://edge.allegro.pl/ratings-api/sellers/.*";
 
-    public static void main(String[] args) throws IOException {
-        Gson gson = new GsonBuilder().setLenient().create();
+    public static void main(String[] args) {
+        Gson gson = createGson();
+        for (File file : FileLoader.loadFiles()) {
+            processFile(file, gson);
+        }
+    }
 
-        File[] files = FileLoader.loadFiles();
-        for (File file : files) {
-            System.out.println("Przetwarzanie pliku: " + file.getName());
-            JsonReader reader = new JsonReader(new InputStreamReader(new FileInputStream(file.getAbsolutePath()), StandardCharsets.UTF_8));
-            Har har = gson.fromJson(reader, Har.class);
-            reader.close();
+    private static Gson createGson() {
+        return new GsonBuilder().setLenient().create();
+    }
 
-            Pattern pattern = Pattern.compile("(^[\\w-]+)"); // match string till space or dot character appears
-            Matcher matcher = pattern.matcher(file.getName());
-            if (matcher.find()) {
-                String sellerName = matcher.group();
-                List<String> filteredResponses = getFilteredResponse(har);
-                for (String response: filteredResponses) {
-                    ResponseJsonDto responseJsonDto = gson.fromJson(response, ResponseJsonDto.class);
-                    if (responseJsonDto != null) {
-                        List<Review> reviews = responseJsonDto.getContent().stream()
-                                .map((reviewsDto) -> ReviewMapper.mapToEntity(reviewsDto, sellerName))
-                                .toList();
-                        DatabaseHandler.saveReviewsAndProducts(reviews); //save reviews added
-                    } else {
-                        System.out.println("row was empty");
-                    }
-                }
+    private static void processFile(File file, Gson gson) {
+        System.out.println("Przetwarzanie pliku: " + file.getName());
+        Har har = readHar(file, gson);
+        String sellerName = extractSellerName(file.getName());
+        if (sellerName == null) {
+            System.out.println("nie można znaleźć sprzedawcy po nazwie pliku, pomijanie pliku " + file.getName());
+            return;
+        }
+        List<String> filteredResponses = getFilteredResponse(har);
+        for (String response : filteredResponses) {
+            ResponseJsonDto responseJsonDto = gson.fromJson(response, ResponseJsonDto.class);
+            if (responseJsonDto != null) {
+                List<Review> reviews = responseJsonDto.getContent().stream()
+                        .map(reviewsDto -> ReviewMapper.mapToEntity(reviewsDto, sellerName))
+                        .toList();
+                DatabaseHandler.saveReviewsAndProducts(reviews);
             } else {
-                System.out.println("nie można znaleźć sprzedawcy po nazwie pliku, pomijanie pliku " + file.getName());
+                System.out.println("row was empty");
             }
         }
+    }
+
+    private static Har readHar(File file, Gson gson) {
+        try (JsonReader reader = new JsonReader(new InputStreamReader(new FileInputStream(file.getAbsolutePath()), StandardCharsets.UTF_8))) {
+            return gson.fromJson(reader, Har.class);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private static String extractSellerName(String fileName) {
+        Pattern pattern = Pattern.compile("(^[\\w-]+)");
+        Matcher matcher = pattern.matcher(fileName);
+        return matcher.find() ? matcher.group() : null;
     }
 
     private static List<String> getFilteredResponse(Har har) {

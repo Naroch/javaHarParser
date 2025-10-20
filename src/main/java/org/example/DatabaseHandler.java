@@ -34,8 +34,7 @@ public class DatabaseHandler {
 //);
 
 
-
-//    WITH ProductReviews AS (
+    //    WITH ProductReviews AS (
 //            SELECT
 //                    p.id AS product_id,
 //            p.title AS product_title,
@@ -78,7 +77,7 @@ public class DatabaseHandler {
 //    INNER JOIN MonthlyReviews mr ON pr.product_id = mr.product_id
 //    ORDER BY
 //    pr.total_positive_reviews DESC, pr.product_id, mr.year, mr.month;
-private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnalitics?charSet=UTF-8";
+    private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnalitics?charSet=UTF-8";
 
     private final static String username = "admin";
     private final static String password = "admin";
@@ -105,33 +104,12 @@ private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnal
                  PreparedStatement linkReviewProduct = connection.prepareStatement(LINK_REVIEW_WITH_PRODUCTS)) {
 
                 for (Review review : reviews) {
-                    insertReview.setString(1, review.getId());
-                    insertReview.setString(2, review.getSeller());
-                    insertReview.setTimestamp(3, new java.sql.Timestamp(review.getCreationDate().getTime()));
-                    insertReview.setTimestamp(4, new java.sql.Timestamp(review.getLastChangeDate().getTime()));
-                    insertReview.setBoolean(5, review.isRatedAgain());
-                    insertReview.setInt(6, review.getDescriptionRating());
-                    insertReview.setInt(7, review.getServiceRating());
-                    insertReview.setBoolean(8, review.isRecommend());
-                    insertReview.addBatch();
-
-                    for (Product product : review.getProducts()) {
-                        insertProduct.setLong(1,  product.getId());
-                        insertProduct.setString(2, product.getTitle());
-                        insertProduct.setString(3, product.getUrl());
-                        insertProduct.addBatch();
-
-                        linkReviewProduct.setString(1, review.getId());
-                        linkReviewProduct.setLong(2, product.getId());
-                        linkReviewProduct.addBatch();
-                    }
+                    addReviewToBatch(insertReview, review);
+                    addProductsAndLinksToBatch(insertProduct, linkReviewProduct, review);
                 }
 
-                insertReview.executeBatch();
-                insertProduct.executeBatch();
-                linkReviewProduct.executeBatch();
+                executeBatches(insertReview, insertProduct, linkReviewProduct);
                 connection.commit();
-//                System.out.println("Batch insert completed successfully.");
             } catch (SQLException e) {
                 connection.rollback();
                 System.err.println("Failed to execute batch insert. Transaction is rolled back.");
@@ -140,6 +118,41 @@ private final static String url = "jdbc:postgresql://localhost:32768/AllegroAnal
         } catch (SQLException e) {
             System.err.println("Failed to obtain database connection.");
             e.printStackTrace();
+        }
+    }
+
+    private static void addReviewToBatch(PreparedStatement insertReview, Review review) throws SQLException {
+        insertReview.setString(1, review.getId());
+        insertReview.setString(2, review.getSeller());
+        insertReview.setTimestamp(3, new java.sql.Timestamp(review.getCreationDate().getTime()));
+        insertReview.setTimestamp(4, new java.sql.Timestamp(review.getLastChangeDate().getTime()));
+        insertReview.setBoolean(5, review.isRatedAgain());
+        insertReview.setInt(6, review.getDescriptionRating());
+        insertReview.setInt(7, review.getServiceRating());
+        insertReview.setBoolean(8, review.isRecommend());
+        insertReview.addBatch();
+    }
+
+    private static void addProductsAndLinksToBatch(
+            PreparedStatement insertProduct,
+            PreparedStatement linkReviewProduct,
+            Review review) throws SQLException
+    {
+        for (Product product : review.getProducts()) {
+            insertProduct.setLong(1, product.getId());
+            insertProduct.setString(2, product.getTitle());
+            insertProduct.setString(3, product.getUrl());
+            insertProduct.addBatch();
+
+            linkReviewProduct.setString(1, review.getId());
+            linkReviewProduct.setLong(2, product.getId());
+            linkReviewProduct.addBatch();
+        }
+    }
+
+    private static void executeBatches(PreparedStatement... statements) throws SQLException {
+        for (PreparedStatement ps : statements) {
+            ps.executeBatch();
         }
     }
 

@@ -40,7 +40,7 @@ public class Review {
     @Column(name = "recommend", nullable = false)
     private boolean recommend;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "reviews_products",
             joinColumns = @JoinColumn(name = "review_id", referencedColumnName = "id"),

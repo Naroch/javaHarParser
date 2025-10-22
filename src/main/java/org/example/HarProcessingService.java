@@ -7,6 +7,7 @@ import org.example.dto.ResponseJsonDto;
 import org.example.dto.har.Har;
 import org.example.mapper.ReviewMapper;
 import org.example.model.Review;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Service
 public class HarProcessingService {
 
     private static final String RATING_URL = "https://edge.allegro.pl/ratings-api/sellers/.*";

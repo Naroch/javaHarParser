@@ -7,6 +7,7 @@ import org.example.dto.ResponseJsonDto;
 import org.example.dto.har.Har;
 import org.example.mapper.ReviewMapper;
 import org.example.model.Review;
+import org.example.service.ReviewService;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -19,6 +20,12 @@ import java.util.regex.Pattern;
 public class HarProcessingService {
 
     private static final String RATING_URL = "https://edge.allegro.pl/ratings-api/sellers/.*";
+
+    private final ReviewService reviewService;
+
+    public HarProcessingService(ReviewService reviewService) {
+        this.reviewService = reviewService;
+    }
 
     public void processAllHarFiles() {
         Gson gson = createGson();
@@ -46,7 +53,7 @@ public class HarProcessingService {
                 List<Review> reviews = responseJsonDto.getContent().stream()
                         .map(reviewsDto -> ReviewMapper.mapToEntity(reviewsDto, sellerName))
                         .toList();
-                DatabaseHandler.saveReviewsAndProducts(reviews);
+                reviewService.insertReviews(reviews);
             } else {
                 System.out.println("row was empty");
             }
@@ -54,7 +61,8 @@ public class HarProcessingService {
     }
 
     private Har readHar(File file, Gson gson) {
-        try (JsonReader reader = new JsonReader(new InputStreamReader(new FileInputStream(file.getAbsolutePath()), StandardCharsets.UTF_8))) {
+        try (JsonReader reader = new JsonReader(
+                new InputStreamReader(new FileInputStream(file.getAbsolutePath()), StandardCharsets.UTF_8))) {
             return gson.fromJson(reader, Har.class);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -65,7 +73,7 @@ public class HarProcessingService {
         Pattern pattern = Pattern.compile("(^[\\w-]+)");
         Matcher matcher = pattern.matcher(fileName);
         return matcher.find() ? matcher.group() : null;
-        }
+    }
 
     private List<String> getFilteredResponse(Har har) {
         return har.getLog().getEntries().stream()

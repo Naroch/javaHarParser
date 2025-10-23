@@ -38,6 +38,12 @@ public class HarProcessingService {
         return new GsonBuilder().setLenient().create();
     }
 
+    // Public entry-point to process a single HAR file (used by integration tests)
+    public void processHarFile(File file) {
+        Gson gson = createGson();
+        processFile(file, gson);
+    }
+
     private void processFile(File file, Gson gson) {
         System.out.println("Przetwarzanie pliku: " + file.getName());
         Har har = readHar(file, gson);

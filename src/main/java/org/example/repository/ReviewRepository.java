@@ -2,7 +2,6 @@ package org.example.repository;
 
 import org.example.model.Review;
 import org.example.repository.projection.ProductMonthlyCountProjection;
-import org.example.repository.projection.ProductMonthlyStatsProjection;
 import org.example.repository.projection.ProductTotalPositiveReviewsProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,10 +23,9 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
             "FROM reviews r\n" +
             "INNER JOIN reviews_products rp ON r.id = rp.review_id\n" +
             "INNER JOIN products p ON rp.product_id = p.id\n" +
-            "WHERE r.recommend = true\n" +
             "GROUP BY p.id, p.title, p.url\n" +
             "ORDER BY COUNT(r.id) DESC, p.id;", nativeQuery = true)
-    List<ProductTotalPositiveReviewsProjection> findProductPositiveReviewTotals();
+    List<ProductTotalPositiveReviewsProjection> findProductReviewTotals();
 
     @Query(value = "SELECT\n" +
             "    p.id AS productId,\n" +
@@ -37,8 +35,7 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
             "FROM reviews r\n" +
             "INNER JOIN reviews_products rp ON r.id = rp.review_id\n" +
             "INNER JOIN products p ON rp.product_id = p.id\n" +
-            "WHERE r.recommend = true\n" +
             "GROUP BY p.id, EXTRACT(YEAR FROM r.creation_date), EXTRACT(MONTH FROM r.creation_date)\n" +
             "ORDER BY p.id, year, month;", nativeQuery = true)
-    List<ProductMonthlyCountProjection> findMonthlyPositiveReviews();
+    List<ProductMonthlyCountProjection> findMonthlyReviews();
 }

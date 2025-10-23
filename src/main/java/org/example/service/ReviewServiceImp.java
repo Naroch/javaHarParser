@@ -25,7 +25,7 @@ public class ReviewServiceImp implements ReviewService {
 
     @Override
     public List<ProductMonthlyStatsDto> getMonthlyPositiveReviewsStats() {
-        List<ProductMonthlyStatsProjection> rows = reviewRepository.findMonthlyPositiveReviewStats();
+        List<ProductMonthlyStatsProjection> rows = reviewRepository.findMonthlyReviewStats();
         return rows.stream()
                 .map(p -> new ProductMonthlyStatsDto(
                         p.getProduct_id(),

@@ -21,20 +21,20 @@ public class Review {
     private String seller;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "creationDate", nullable = false)
+    @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "lastChangeDate", nullable = false)
+    @Column(name = "last_change_date", nullable = false)
     private Date lastChangeDate;
 
-    @Column(name = "ratedAgain", nullable = false)
+    @Column(name = "rated_again", nullable = false)
     private boolean ratedAgain;
 
-    @Column(name = "descriptionRating", nullable = false)
+    @Column(name = "description_rating", nullable = false)
     private int descriptionRating;
 
-    @Column(name = "serviceRating", nullable = false)
+    @Column(name = "service_rating", nullable = false)
     private int serviceRating;
 
     @Column(name = "recommend", nullable = false)

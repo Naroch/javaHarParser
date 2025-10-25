@@ -69,11 +69,36 @@ public class ReviewStatsController {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("MonthlyStats");
 
-            // Header style: bold
+            // Header style: bold + green fill (#8bc34a)
             CellStyle headerStyle = workbook.createCellStyle();
             Font headerFont = workbook.createFont();
             headerFont.setBold(true);
             headerStyle.setFont(headerFont);
+            if (headerStyle instanceof org.apache.poi.xssf.usermodel.XSSFCellStyle) {
+                org.apache.poi.xssf.usermodel.XSSFCellStyle xh = (org.apache.poi.xssf.usermodel.XSSFCellStyle) headerStyle;
+                xh.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                xh.setFillForegroundColor(new org.apache.poi.xssf.usermodel.XSSFColor(new byte[]{
+                        (byte) 0x8b, (byte) 0xc3, (byte) 0x4a
+                }, null));
+            }
+
+            // Data row base styles: odd (blueish #d0e0e3) and even (white-ish #eef7e3)
+            CellStyle oddRowBase = workbook.createCellStyle();
+            if (oddRowBase instanceof org.apache.poi.xssf.usermodel.XSSFCellStyle) {
+                org.apache.poi.xssf.usermodel.XSSFCellStyle xs = (org.apache.poi.xssf.usermodel.XSSFCellStyle) oddRowBase;
+                xs.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                xs.setFillForegroundColor(new org.apache.poi.xssf.usermodel.XSSFColor(new byte[]{
+                        (byte) 0xd0, (byte) 0xe0, (byte) 0xe3
+                }, null));
+            }
+            CellStyle evenRowBase = workbook.createCellStyle();
+            if (evenRowBase instanceof org.apache.poi.xssf.usermodel.XSSFCellStyle) {
+                org.apache.poi.xssf.usermodel.XSSFCellStyle xs = (org.apache.poi.xssf.usermodel.XSSFCellStyle) evenRowBase;
+                xs.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                xs.setFillForegroundColor(new org.apache.poi.xssf.usermodel.XSSFColor(new byte[]{
+                        (byte) 0xee, (byte) 0xf7, (byte) 0xe3
+                }, null));
+            }
 
             String[] columns = new String[]{
                     "productId",
@@ -93,23 +118,75 @@ public class ReviewStatsController {
                 cell.setCellStyle(headerStyle);
             }
 
-            // Data rows
-            int rowIdx = 1;
+            // Data rows with styling and borders logic translated from Python
+            Long prevProductId = null;
+            Row prevRow = null;
+            int dataRowIndex = 1; // first data row is Excel row 2 (index 1)
             for (ProductMonthlyStatsDto s : stats) {
-                Row row = sheet.createRow(rowIdx++);
+                Row row = sheet.createRow(dataRowIndex);
                 int col = 0;
-                row.createCell(col++).setCellValue(s.getProductId());
-                row.createCell(col++).setCellValue(s.getProductTitle() == null ? "" : s.getProductTitle());
-                row.createCell(col++).setCellValue(s.getProductUrl() == null ? "" : s.getProductUrl());
-                row.createCell(col++).setCellValue(s.getYear());
-                row.createCell(col++).setCellValue(s.getMonth());
-                row.createCell(col++).setCellValue(s.getPositiveReviewsCount());
-                row.createCell(col++).setCellValue(s.getTotalPositiveReviews());
+                Cell c0 = row.createCell(col++); c0.setCellValue(s.getProductId());
+                Cell c1 = row.createCell(col++); c1.setCellValue(s.getProductTitle() == null ? "" : s.getProductTitle());
+                Cell c2 = row.createCell(col++); c2.setCellValue(s.getProductUrl() == null ? "" : s.getProductUrl());
+                Cell c3 = row.createCell(col++); c3.setCellValue(s.getYear());
+                Cell c4 = row.createCell(col++); c4.setCellValue(s.getMonth());
+                Cell c5 = row.createCell(col++); c5.setCellValue(s.getPositiveReviewsCount());
+                Cell c6 = row.createCell(col++); c6.setCellValue(s.getTotalPositiveReviews());
+
+                boolean isOdd = (dataRowIndex % 2 == 1); // Python: odd rows -> blue (#d0e0e3)
+                CellStyle baseStyle = isOdd ? oddRowBase : evenRowBase;
+                // Apply base style to all cells in the row
+                for (int i = 0; i < columns.length; i++) {
+                    Cell cell = row.getCell(i);
+                    cell.setCellStyle(baseStyle);
+                }
+
+                Long currentProductId = s.getProductId();
+                boolean groupStart = (prevProductId == null) || (currentProductId == null ? prevProductId != null : !currentProductId.equals(prevProductId));
+
+                if (groupStart) {
+                    // Add top border to all cells in this row
+                    for (int i = 0; i < columns.length; i++) {
+                        Cell cell = row.getCell(i);
+                        CellStyle newStyle = workbook.createCellStyle();
+                        newStyle.cloneStyleFrom(cell.getCellStyle());
+                        newStyle.setBorderTop(BorderStyle.THIN);
+                        cell.setCellStyle(newStyle);
+                    }
+                    // Add bottom border to previous row's first column cell
+                    if (prevRow != null) {
+                        Cell prevFirst = prevRow.getCell(0);
+                        if (prevFirst != null) {
+                            CellStyle prevStyle = prevFirst.getCellStyle();
+                            CellStyle mod = workbook.createCellStyle();
+                            mod.cloneStyleFrom(prevStyle);
+                            mod.setBorderBottom(BorderStyle.THIN);
+                            prevFirst.setCellStyle(mod);
+                        }
+                    }
+                }
+
+                prevProductId = currentProductId;
+                prevRow = row;
+                dataRowIndex++;
             }
 
             // Autosize columns
             for (int i = 0; i < columns.length; i++) {
                 sheet.autoSizeColumn(i);
+            }
+
+            // Conditional formatting: yellow fill for F2:F{last} between 6 and 9
+            if (!stats.isEmpty()) {
+                SheetConditionalFormatting sheetCF = sheet.getSheetConditionalFormatting();
+                ConditionalFormattingRule rule = sheetCF.createConditionalFormattingRule(ComparisonOperator.BETWEEN, "6", "9");
+                PatternFormatting pf = rule.createPatternFormatting();
+                pf.setFillBackgroundColor(IndexedColors.YELLOW.getIndex());
+                pf.setFillPattern(PatternFormatting.SOLID_FOREGROUND);
+                org.apache.poi.ss.util.CellRangeAddress[] regions = new org.apache.poi.ss.util.CellRangeAddress[]{
+                        org.apache.poi.ss.util.CellRangeAddress.valueOf("F2:F" + (stats.size() + 1))
+                };
+                sheetCF.addConditionalFormatting(regions, rule);
             }
 
             workbook.write(out);

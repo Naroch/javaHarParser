@@ -19,7 +19,7 @@ public class ReviewMapper {
                 reviewDto.isRatedAgain(),
                 5,
                 5,
-                reviewDto.isRecommend(),
+                true,
                 products
         );
     }

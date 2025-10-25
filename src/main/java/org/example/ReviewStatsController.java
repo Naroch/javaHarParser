@@ -176,7 +176,7 @@ public class ReviewStatsController {
                 sheet.autoSizeColumn(i);
             }
 
-            // Conditional formatting: yellow fill for F2:F{last} between 6 and 9
+            // Conditional formatting: yellow fill for month column (E2:E{last}) between 6 and 9
             if (!stats.isEmpty()) {
                 SheetConditionalFormatting sheetCF = sheet.getSheetConditionalFormatting();
                 ConditionalFormattingRule rule = sheetCF.createConditionalFormattingRule(ComparisonOperator.BETWEEN, "6", "9");
@@ -184,7 +184,7 @@ public class ReviewStatsController {
                 pf.setFillBackgroundColor(IndexedColors.YELLOW.getIndex());
                 pf.setFillPattern(PatternFormatting.SOLID_FOREGROUND);
                 org.apache.poi.ss.util.CellRangeAddress[] regions = new org.apache.poi.ss.util.CellRangeAddress[]{
-                        org.apache.poi.ss.util.CellRangeAddress.valueOf("F2:F" + (stats.size() + 1))
+                        org.apache.poi.ss.util.CellRangeAddress.valueOf("E2:E" + (stats.size() + 1))
                 };
                 sheetCF.addConditionalFormatting(regions, rule);
             }

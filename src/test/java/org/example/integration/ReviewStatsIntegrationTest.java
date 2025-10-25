@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -52,7 +51,7 @@ class ReviewStatsIntegrationTest {
         reviewService.insertReviews(List.of(r1, r2, r3, r4));
 
         // Act
-        List<ProductMonthlyStatsDto> stats = reviewService.getMonthlyPositiveReviewsStats();
+        List<ProductMonthlyStatsDto> stats = reviewService.getMonthlyReviewsStats();
 
         // Assert
         assertThat(stats).hasSize(3);

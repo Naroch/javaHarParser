@@ -26,7 +26,7 @@ public class ReviewStatsController {
 
     @GetMapping(value = "/stats/monthly.csv", produces = "text/csv")
     public ResponseEntity<byte[]> getMonthlyPositiveReviewsStatsCsv() {
-        List<ProductMonthlyStatsDto> stats = reviewService.getMonthlyPositiveReviewsStats();
+        List<ProductMonthlyStatsDto> stats = reviewService.getMonthlyReviewsStats();
 
         String header = String.join(",",
                 "productId",

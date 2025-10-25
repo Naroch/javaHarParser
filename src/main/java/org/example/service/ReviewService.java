@@ -8,5 +8,5 @@ import java.util.List;
 public interface ReviewService {
     void insertReviews(List<Review> reviews);
 
-    List<ProductMonthlyStatsDto> getMonthlyPositiveReviewsStats();
+    List<ProductMonthlyStatsDto> getMonthlyReviewsStats();
 }

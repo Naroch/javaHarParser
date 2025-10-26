@@ -3,7 +3,6 @@ package org.example.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
-import org.example.utils.FileLoader;
 import org.example.dto.ResponseJsonDto;
 import org.example.dto.har.Har;
 import org.example.mapper.ReviewMapper;

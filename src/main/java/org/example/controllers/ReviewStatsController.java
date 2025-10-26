@@ -71,7 +71,8 @@ public class ReviewStatsController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
-            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=monthly_positive_reviews_stats.xlsx");
+            String fileName = seller + " report.xlsx";
+            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
 
             return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
         } catch (Exception e) {

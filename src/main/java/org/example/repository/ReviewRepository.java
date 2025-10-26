@@ -21,7 +21,6 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
                 FROM reviews r
                 INNER JOIN reviews_products rp ON r.id = rp.review_id
                 INNER JOIN products p ON rp.product_id = p.id
-                WHERE r.recommend = true
                 GROUP BY p.id, p.title, p.url
             ),
             MonthlyReviews AS (
@@ -33,7 +32,6 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
                 FROM reviews r
                 INNER JOIN reviews_products rp ON r.id = rp.review_id
                 INNER JOIN products p ON rp.product_id = p.id
-                WHERE r.recommend = true
                 GROUP BY
                     p.id,
                     EXTRACT(YEAR FROM r.creation_date),

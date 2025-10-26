@@ -9,4 +9,6 @@ public interface ReviewService {
     void insertReviews(List<Review> reviews);
 
     List<ProductMonthlyStatsDto> getMonthlyReviewsStats();
+
+    List<ProductMonthlyStatsDto> getMonthlyReviewsStatsBySeller(String seller);
 }

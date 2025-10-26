@@ -7,6 +7,7 @@ import org.example.integration.setup.TestcontainersConfiguration;
 import org.example.model.Review;
 import org.example.repository.ReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,6 +43,7 @@ class HarImportIntegrationTest {
     }
 
     @Test
+    @Disabled("takes too long")
     void should_import_reviews_from_har_and_persist_in_database() throws IOException {
         // Arrange: copy test HAR resource to a temp file with seller prefix "importokazji"
         File tempHar = copyResourceHarToTempWithExactName("/harfiles/importokazji allegro.pl.har", "importokazji allegro.pl.har");

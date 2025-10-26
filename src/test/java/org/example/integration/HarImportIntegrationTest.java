@@ -1,6 +1,6 @@
 package org.example.integration;
 
-import org.example.HarProcessingService;
+import org.example.service.HarProcessingService;
 import org.example.Main;
 import org.example.integration.setup.DatabaseCleanup;
 import org.example.integration.setup.TestcontainersConfiguration;

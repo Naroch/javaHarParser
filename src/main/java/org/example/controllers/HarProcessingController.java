@@ -1,5 +1,6 @@
-package org.example;
+package org.example.controllers;
 
+import org.example.service.HarProcessingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -42,7 +42,7 @@ class ReviewStatsIntegrationTest {
         Product p1 = new Product(1L, "Product 1", "http://example.com/p1");
         Product p2 = new Product(2L, "Product 2", "http://example.com/p2");
 
-        // Reviews: two positive for p1 in Jan and Feb, one positive for p2 in Jan, and one negative for p1 (ignored)
+        // Reviews: p1 has Jan (positive) and Feb (positive + negative), p2 has Jan (positive)
         Review r1 = new Review("r1", "seller", dateOf(2025, 1, 10), dateOf(2025, 1, 10), false, 5, 5, true, List.of(p1));
         Review r2 = new Review("r2", "seller", dateOf(2025, 2, 5), dateOf(2025, 2, 5), false, 5, 5, true, List.of(p1));
         Review r3 = new Review("r3", "seller", dateOf(2025, 1, 15), dateOf(2025, 1, 15), false, 5, 5, true, List.of(p2));
@@ -57,23 +57,23 @@ class ReviewStatsIntegrationTest {
         assertThat(stats).hasSize(3);
 
         // Expect sorting by totalPositiveReviews desc, then productId, year, month
-        // p1 has total 2, p2 has total 1
+        // p1 has total 3, p2 has total 1
         ProductMonthlyStatsDto s1 = stats.get(0);
         ProductMonthlyStatsDto s2 = stats.get(1);
         ProductMonthlyStatsDto s3 = stats.get(2);
 
         // First two entries should be for product 1, months 1 and 2
         assertThat(s1.getProductId()).isEqualTo(1L);
-        assertThat(s1.getTotalPositiveReviews()).isEqualTo(2L);
+        assertThat(s1.getTotalPositiveReviews()).isEqualTo(3L);
         assertThat(s1.getYear()).isEqualTo(2025);
         assertThat(s1.getMonth()).isEqualTo(1);
         assertThat(s1.getPositiveReviewsCount()).isEqualTo(1L);
 
         assertThat(s2.getProductId()).isEqualTo(1L);
-        assertThat(s2.getTotalPositiveReviews()).isEqualTo(2L);
+        assertThat(s2.getTotalPositiveReviews()).isEqualTo(3L);
         assertThat(s2.getYear()).isEqualTo(2025);
         assertThat(s2.getMonth()).isEqualTo(2);
-        assertThat(s2.getPositiveReviewsCount()).isEqualTo(1L);
+        assertThat(s2.getPositiveReviewsCount()).isEqualTo(2L);
 
         // Last entry is for product 2, month 1, total 1
         assertThat(s3.getProductId()).isEqualTo(2L);

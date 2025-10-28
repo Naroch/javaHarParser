@@ -13,7 +13,7 @@ public class ReviewMapper {
 
         return new Review(
                 reviewDto.getId(),
-                sellerName,
+                sellerName.toLowerCase(),
                 reviewDto.getCreationDate(),
                 reviewDto.getLastChangeDate(),
                 reviewDto.isRatedAgain(),

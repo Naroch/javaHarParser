@@ -35,6 +35,11 @@ public class ReviewServiceImp implements ReviewService {
         return mapRows(rows);
     }
 
+    @Override
+    public List<String> getDistinctSellers() {
+        return reviewRepository.findDistinctSellers();
+    }
+
     private List<ProductMonthlyStatsDto> mapRows(List<ProductMonthlyStatsProjection> rows) {
         return rows.stream()
                 .map(p -> new ProductMonthlyStatsDto(

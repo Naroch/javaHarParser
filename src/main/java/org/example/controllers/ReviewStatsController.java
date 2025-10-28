@@ -28,6 +28,11 @@ public class ReviewStatsController {
         this.monthlyStatsXlsxService = monthlyStatsXlsxService;
     }
 
+    @GetMapping(value = "/sellers")
+    public List<String> getAllSellers() {
+        return reviewService.getDistinctSellers();
+    }
+
     @GetMapping(value = "/stats/monthly.csv", produces = "text/csv")
     public ResponseEntity<byte[]> getMonthlyPositiveReviewsStatsCsv() {
         List<ProductMonthlyStatsDto> stats = reviewService.getMonthlyReviewsStats();

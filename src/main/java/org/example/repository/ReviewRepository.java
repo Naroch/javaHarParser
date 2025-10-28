@@ -101,4 +101,7 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
                 mr.month;
             """, nativeQuery = true)
     List<ProductMonthlyStatsProjection> findMonthlyReviewStatsBySeller(@Param("seller") String seller);
+
+    @Query(value = "SELECT DISTINCT seller FROM reviews ORDER BY seller", nativeQuery = true)
+    List<String> findDistinctSellers();
 }

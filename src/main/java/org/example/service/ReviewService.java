@@ -11,4 +11,6 @@ public interface ReviewService {
     List<ProductMonthlyStatsDto> getMonthlyReviewsStats();
 
     List<ProductMonthlyStatsDto> getMonthlyReviewsStatsBySeller(String seller);
+
+    List<String> getDistinctSellers();
 }

@@ -20,6 +20,28 @@ public class ReviewServiceImp implements ReviewService {
 
     @Override
     public void insertReviews(List<Review> reviews) {
+        // Canonicalize Product instances across all reviews within this save operation
+        // to avoid Hibernate's "Multiple representations of the same entity are being merged" error.
+        // When multiple detached Product instances with the same ID appear in different Review objects
+        // in the same persistence context, cascading MERGE can trigger that exception.
+        // We ensure that each unique productId maps to exactly one Product instance referenced by all reviews.
+        java.util.Map<Long, org.example.model.Product> canonicalProducts = new java.util.HashMap<>();
+
+        for (Review review : reviews) {
+            if (review.getProducts() == null || review.getProducts().isEmpty()) {
+                continue;
+            }
+            // Deduplicate products within a single review by ID and replace with canonical instances
+            java.util.LinkedHashMap<Long, org.example.model.Product> perReview = new java.util.LinkedHashMap<>();
+            for (org.example.model.Product p : review.getProducts()) {
+                if (p == null) continue;
+                long id = p.getId();
+                org.example.model.Product canonical = canonicalProducts.computeIfAbsent(id, k -> p);
+                perReview.put(id, canonical);
+            }
+            review.setProducts(new java.util.ArrayList<>(perReview.values()));
+        }
+
         reviewRepository.saveAll(reviews);
     }
 
